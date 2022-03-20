@@ -9,7 +9,7 @@
     <div id="ac_game_123"></div>
     <script type="module">
         import {AcGame} from "{% static 'js/dist/game.js' %}";
-        $(document).ready(function(){
+        $(window).on("load", function(){ //此处使用document事件会有兼容性问题
             let ac_game = new AcGame("ac_game_123")
         })
     </script>
