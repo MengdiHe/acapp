@@ -13,17 +13,16 @@ class AcGameMenu {
         </div>
         <br>
         <div class="ac-game-menu-field-item ac-game-menu-field-item-settings">
-            设置
+            退出
         </div>
     </div>
 </div>
 `);
-
+        this.$menu.hide();
         this.root.$ac_game.append(this.$menu);
         this.$single_mode = this.$menu.find('.ac-game-menu-field-item-single-mode');
         this.$multi_mode = this.$menu.find('.ac-game-menu-field-item-multi-mode');
         this.$settings = this.$menu.find('.ac-game-menu-field-item-settings');
-
         this.start();
     }
 
@@ -37,6 +36,9 @@ class AcGameMenu {
             outer.hide();
             outer.root.playground.show();
         });
+        this.$settings.click(function() {
+            outer.root.settings.logout_on_remote();
+        })
     }
 
     show() {
