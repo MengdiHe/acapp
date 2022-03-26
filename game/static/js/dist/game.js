@@ -440,6 +440,7 @@ class Settings {
     constructor(root) {
         this.root = root;
         this.platform = "WEB";
+        if (this.root.AcWingOs) this.platform = "ACAPP";
         this.username = "";
         this.photo = "";
         this.$settings = $(`
@@ -533,23 +534,49 @@ class Settings {
         this.$register_submit = this.$register.find(".ac-game-settings-submit button");
         this.$register_error_message = this.$register.find(".ac-game-settings-error-message");
         this.$register_login = this.$register.find(".ac-game-settings-option");
-
+        this.$acwing_login = this.$settings.find(".ac-game-settings-acwing img")
         this.$register.hide();
 
         this.root.$ac_game.append(this.$settings);
 
-        if (this.root.AcWingOs) this.platform = "AcWingOs";
         this.start();
     }
 
     start() {
-        this.getinfo();
-        this.add_listening_events();
+        if (this.platform == "ACAPP") {
+            console.log("109");
+            this.getinfo_acapp();
+        } else {
+            this.getinfo_web();
+            this.add_listening_events();
+        }
     }
 
     add_listening_events() {
         this.add_listening_events_login();
         this.add_listening_events_register();
+        this.add_listening_events_acwing_login();
+    }
+
+    add_listening_events_acwing_login() {
+        let outer = this;
+
+        this.$acwing_login.click(function() {
+            outer.acwing_login();
+        })
+    }
+
+    acwing_login() {
+        $.ajax({
+            url: "https://app1848.acapp.acwing.com.cn/settings/acwing/web/apply_code",
+            type: "GET",
+            success: function(resp) {
+                console.log(resp);
+                if (resp.result === "success") {
+                    window.location.replace(resp.apply_code_url);
+                }
+            }
+        })
     }
 
     add_listening_events_login() {
@@ -644,7 +671,7 @@ class Settings {
         this.$login.show();
     }
 
-    getinfo() {
+    getinfo_web() {
         let outer = this;
         $.ajax({
             url: "https://app1848.acapp.acwing.com.cn/settings/getinfo/",
@@ -666,12 +693,40 @@ class Settings {
         })
     }
 
+    getinfo_acapp() {
+        let outer = this;
+
+        $.ajax({
+            url: "https://app1848.acapp.acwing.com.cn/settings/acwing/acapp/apply_code",
+            type: "GET",
+            success: function(resp) {
+                outer.acapp_login(resp.appid, resp.redirect_uri, resp.scope, resp.state);
+            }
+        })
+    }
+
+    acapp_login(appid, redirect_uri, scope, state) {
+        let outer = this;
+
+        this.root.AcWingOs.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp) {
+            console.log();
+
+            if (resp.result === "success") {
+                outer.username = resp.username;
+                outer.photo = resp.photo;
+                outer.hide();
+                outer.root.menu.show();
+            }
+        });
+    }
+
     hide() {
         this.$settings.hide();
     }
 }
 export class AcGame {
     constructor(id, AcWingOs) {
+        console.log(AcWingOs);
         this.id = id;
         this.$ac_game = $('#' + id);
 
