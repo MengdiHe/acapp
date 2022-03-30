@@ -19,14 +19,12 @@ class Particle extends AcGameObject {
 
     update() {
         if (this.move_length < this.eps || this.speed < this.eps) {
-            console.log("destroyii");
             this.destroy();
             return false;
         }
         let moved = Math.min(this.move_length, this.timedelta * this.speed / 1000);
         this.x += moved * Math.cos(this.angle);
         this.y += moved * Math.sin(this.angle);
-        console.log("here %f %f %f", this.move_length, moved, this.speed * this.timedelta / 1000);
         this.move_length -= moved;
         this.speed *= this.friction;
         this.render();
@@ -34,7 +32,6 @@ class Particle extends AcGameObject {
 
     render() {
         let scale = this.playground.scale;
-        console.log(scale, this.x, this.y, this.radius);
         this.ctx.beginPath();
         this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
         this.ctx.fillStyle = this.color;

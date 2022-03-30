@@ -1,6 +1,5 @@
 export class AcGame {
     constructor(id, AcWingOs) {
-        console.log(AcWingOs);
         this.id = id;
         this.$ac_game = $('#' + id);
 

@@ -106,7 +106,6 @@ class Settings {
 
     start() {
         if (this.platform == "ACAPP") {
-            console.log("109");
             this.getinfo_acapp();
         } else {
             this.getinfo_web();
@@ -133,7 +132,6 @@ class Settings {
             url: "https://app1848.acapp.acwing.com.cn/settings/acwing/web/apply_code",
             type: "GET",
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     window.location.replace(resp.apply_code_url);
                 }
@@ -164,7 +162,6 @@ class Settings {
                 password: password,
             },
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     location.reload();
                 } else {
@@ -201,7 +198,6 @@ class Settings {
                 password_confirm: password_confirm,
             },
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     location.reload();
                 } else {
@@ -228,7 +224,6 @@ class Settings {
     }
 
     login() { //打开登录界面
-        console.log("hmd");
         this.$register.hide();
         this.$login.show();
     }
@@ -242,7 +237,6 @@ class Settings {
                 platform: outer.platform,
             },
             success: function(resp) {
-                console.log(resp);
                 if (resp.result === "success") {
                     outer.username = resp.username;
                     outer.photo = resp.photo;
@@ -271,7 +265,6 @@ class Settings {
         let outer = this;
 
         this.root.AcWingOs.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp) {
-            console.log();
 
             if (resp.result === "success") {
                 outer.username = resp.username;

@@ -1,5 +1,5 @@
 class Player extends AcGameObject {
-    constructor(playground, x, y, radius, color, speed, is_me) {
+    constructor(playground, x, y, radius, color, speed, character, username, photo) {
         super();
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
@@ -14,20 +14,19 @@ class Player extends AcGameObject {
         this.color = color;
         this.speed = speed;
         this.skill = null;
-        this.is_me = is_me;
+        this.character = character;
+        this.username = username;
+        this.photo = photo;
         this.eps = 0.01;
-        if (this.is_me) {
-            this.img = new Image();
-            this.img.src = this.playground.root.settings.photo;
-            console.log(this.x, this.y, this.radius, this.speed);
-        }
+        this.img = new Image();
+        this.img.src = this.photo;
         this.friction = 0.9;
     }
 
     start() {
-        if (this.is_me) {
+        if (this.character === "me") {
             this.add_listening_events();
-        } else {
+        } else if (this.character === "robot"){
             let tx = Math.random() * this.playground.width / this.playground.scale;
             let ty = Math.random() * this.playground.height / this.playground.scale;
             this.move_to(tx, ty);
@@ -39,7 +38,7 @@ class Player extends AcGameObject {
         this.playground.game_map.$canvas.on("contextmenu", function() {
             return false;
         });
-        if (this.is_me === true) {
+        if (this.character === "me") {
             this.playground.game_map.$canvas.mousedown(function(e) {
                 const rect = outer.ctx.canvas.getBoundingClientRect();
                 if (e.which === 3) {
@@ -107,7 +106,7 @@ class Player extends AcGameObject {
     }
 
     update_move() {
-        if (!this.is_me && Math.random() < this.timedelta / 5000 )
+        if (this.character === "robot" && Math.random() < this.timedelta / 5000 )
         {
             let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
             if (this !== player) {
@@ -124,7 +123,7 @@ class Player extends AcGameObject {
         } else {
 
             if (this.move_length < this.eps) {
-                if (this.is_me === false) {
+                if (this.character === "robot") {
                     let tx = this.playground.width / this.playground.scale * Math.random();
                     let ty = this.playground.height / this.playground.scale * Math.random();
                     this.move_to(tx, ty);
@@ -149,7 +148,7 @@ class Player extends AcGameObject {
 
     render() {
         let scale = this.playground.scale;
-        if (this.is_me) {
+        if (this.character === "me" || this.character === "enemy") {
             this.ctx.save();
             this.ctx.beginPath();
             this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
@@ -169,7 +168,6 @@ class Player extends AcGameObject {
     on_destroy() {
         for (let i = 0; i < this.playground.players.length; i++) {
             if (this.playground.players[i] === this) {
-                console.log("hmd!");
                 this.playground.players.splice(i, 1);
             }
         }
