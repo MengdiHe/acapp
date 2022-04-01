@@ -32,11 +32,16 @@ class AcGamePlayground {
     }
 
     show(mode) {
-        this.resize();
+        this.$playground.show();
         this.width = this.$playground.width();
         this.height = this.$playground.height();
+        this.resize();
+        this.state = "waiting"; // waiting -> fighting -> over
         this.game_map = new GameMap(this);
+        this.notice_board = new NoticeBoard(this);
+        this.player_count = 0;
         this.players = [];
+        this.mode = mode;
         this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, "white", 0.15, "me", this.root.settings.username, this.root.settings.photo));
         if (mode === "single mode") {
             for (let i = 0; i < 5; i++) {
@@ -50,8 +55,9 @@ class AcGamePlayground {
             this.mps.ws.onopen = function() {
                 outer.mps.send_create_player(outer.root.settings.username, outer.root.settings.photo);
             }
+
+            this.chat_field = new ChatField(this);
         }
-        this.$playground.show();
     }
 
     hide() {

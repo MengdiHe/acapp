@@ -173,13 +173,16 @@ class Settings {
     }
 
     logout_on_remote() {
+        if (this.platform === "ACAPP") {
+            this.root.AcWingOs.api.window.close();
+        } else
         $.ajax({
             url: "https://app1848.acapp.acwing.com.cn/settings/logout/",
             type: "GET",
             success: function() {
                 location.reload();
             }
-        })
+        });
     }
 
     register_on_remote() {
