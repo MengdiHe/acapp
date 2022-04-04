@@ -196,10 +196,12 @@ class GameMap extends AcGameObject {
         super();
         this.playground = playground;
         this.$canvas = $(`<canvas tabindex=0></canvas>`);
+        this.$bgm = $(`<audio class="ac-game-playground-bgm" src="https://www.genball.cn/static/audio/playground/ayaka.mp3" autoplay='autoplay' loop='loop'></audio>`);
         this.ctx = this.$canvas[0].getContext('2d');
         this.ctx.canvas.width = this.playground.width;
         this.ctx.canvas.height = this.playground.height;
         this.playground.$playground.append(this.$canvas);
+        this.playground.$playground.append(this.$bgm);
     }
 
     start() {
@@ -764,6 +766,7 @@ class MultiPlayerSocket {
     }
 
     receive_create_player(uuid, username, photo) {
+        console.log("receive player")
         let player = new Player(
             this.playground,
             this.playground.width / 2 / this.playground.scale,

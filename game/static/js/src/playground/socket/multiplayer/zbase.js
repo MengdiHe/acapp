@@ -35,6 +35,7 @@ class MultiPlayerSocket {
     }
 
     send_create_player(username, photo) {
+        console.log("send_create_player");
         let outer = this;
         this.ws.send(JSON.stringify({
             "event": "create_player",
@@ -45,6 +46,7 @@ class MultiPlayerSocket {
     }
 
     receive_create_player(uuid, username, photo) {
+        console.log("receive player")
         let player = new Player(
             this.playground,
             this.playground.width / 2 / this.playground.scale,
